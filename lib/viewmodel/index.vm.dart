@@ -53,6 +53,10 @@ class IndexViewModel extends BaseViewModel {
 
   Future<void> _reloadCurrentPage() async {
     await refreshSession(reloadList: currentIndex == 0);
+    if (currentIndex == 1) {
+      await _syncManualCheckinCamera();
+      await qrCodeViewModel.startScannerSafely();
+    }
     if (currentIndex == 0) {
       _isQRCodePageInitialized = false;
     }
@@ -91,9 +95,25 @@ class IndexViewModel extends BaseViewModel {
       } else if (index == 0) {
         _isQRCodePageInitialized = false;
       }
+
+      if (index == 1) {
+        await loginViewModel.loadUser();
+        await _syncManualCheckinCamera();
+      }
+
       currentIndex = index;
       notifyListeners();
+
+      if (index == 1) {
+        await qrCodeViewModel.startScannerSafely();
+      }
     }
+  }
+
+  Future<void> _syncManualCheckinCamera() async {
+    await qrCodeViewModel.configureScannerFromSetting(
+      loginViewModel.userLogin?.cameraCheckinThuCong,
+    );
   }
 
   List<Widget> getPages() {

@@ -36,7 +36,7 @@ class _QrCodePageState extends State<QrCodePage>
     super.initState();
     final loginViewModel = widget.indexViewModel.loginViewModel;
     widget.qrViewModel.initScanner(
-      facing: _resolveCameraFacing(
+      facing: widget.qrViewModel.resolveCameraFacing(
         loginViewModel.userLogin?.cameraCheckinThuCong,
       ),
     );
@@ -48,25 +48,13 @@ class _QrCodePageState extends State<QrCodePage>
     }
   }
 
-  CameraFacing _resolveCameraFacing(String? cameraSetting) {
-    switch (cameraSetting?.trim()) {
-      case 'CameraSau':
-        return CameraFacing.back;
-      case 'CameraTruoc':
-      default:
-        return CameraFacing.front;
-    }
-  }
-
   Future<void> _syncPreferredCamera() async {
     if (!mounted) {
       return;
     }
 
-    await widget.qrViewModel.configureScannerFacing(
-      _resolveCameraFacing(
-        widget.indexViewModel.loginViewModel.userLogin?.cameraCheckinThuCong,
-      ),
+    await widget.qrViewModel.configureScannerFromSetting(
+      widget.indexViewModel.loginViewModel.userLogin?.cameraCheckinThuCong,
     );
   }
 

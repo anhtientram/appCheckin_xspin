@@ -84,6 +84,20 @@ class QRCodeViewModel extends BaseViewModel {
     }
   }
 
+  CameraFacing resolveCameraFacing(String? cameraSetting) {
+    switch (cameraSetting?.trim()) {
+      case 'CameraSau':
+        return CameraFacing.back;
+      case 'CameraTruoc':
+      default:
+        return CameraFacing.front;
+    }
+  }
+
+  Future<void> configureScannerFromSetting(String? cameraSetting) async {
+    await configureScannerFacing(resolveCameraFacing(cameraSetting));
+  }
+
   Future<void> configureScannerFacing(CameraFacing facing) async {
     if (_scannerFacing == facing && scannerController != null) {
       return;
