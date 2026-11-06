@@ -39,6 +39,7 @@ Base URL: `https://api.xspin.vn/api/ci`
   "isNhieuLine": "0 | 1",
   "AnhNenQR": "string",
   "CameraCheckinTuDong": "CameraTruoc | CameraSau",
+  "CameraCheckinThuCong": "CameraTruoc | CameraSau",
   "MaKhachHang": "string"
 }
 ```

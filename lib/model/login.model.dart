@@ -24,6 +24,8 @@ class Login {
   String? isNhieuLine;
   String? imageQr;
   String? cameraCheckin;
+  String? cameraCheckinThuCong;
+
   String? maKhachHang;
   String? isCheckinTuDong;
   String? isCheckinThuCong;
@@ -53,6 +55,7 @@ class Login {
       this.isNhieuLine,
       this.imageQr,
       this.cameraCheckin,
+      this.cameraCheckinThuCong,
       this.maKhachHang,
       this.isCheckinTuDong,
       this.isCheckinThuCong});
@@ -84,6 +87,7 @@ class Login {
         isNhieuLine: json['isNhieuLine'],
         imageQr: json['AnhNenQR'],
         cameraCheckin: json['CameraCheckinTuDong'],
+        cameraCheckinThuCong: json['CameraCheckinThuCong'],
         isCheckinTuDong: json['isCheckinTuDong']?.toString(),
         isCheckinThuCong: json['isCheckinThuCong']?.toString(),
         maKhachHang: json['MaKhachHang']);
@@ -117,6 +121,7 @@ class Login {
       'isNhieuLine': isNhieuLine,
       'AnhNenQR': imageQr,
       'CameraCheckinTuDong': cameraCheckin,
+      'CameraCheckinThuCong': cameraCheckinThuCong,
       'MaKhachHang': maKhachHang,
       'isCheckinTuDong': isCheckinTuDong,
       'isCheckinThuCong': isCheckinThuCong,

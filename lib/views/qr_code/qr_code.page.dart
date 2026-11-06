@@ -34,8 +34,40 @@ class _QrCodePageState extends State<QrCodePage>
   @override
   void initState() {
     super.initState();
-    widget.qrViewModel.initScanner();
+    final loginViewModel = widget.indexViewModel.loginViewModel;
+    widget.qrViewModel.initScanner(
+      facing: _resolveCameraFacing(
+        loginViewModel.userLogin?.cameraCheckinThuCong,
+      ),
+    );
     WidgetsBinding.instance.addObserver(this);
+    if (loginViewModel.userLogin == null) {
+      unawaited(
+        loginViewModel.loadUser().then((_) => _syncPreferredCamera()),
+      );
+    }
+  }
+
+  CameraFacing _resolveCameraFacing(String? cameraSetting) {
+    switch (cameraSetting?.trim()) {
+      case 'CameraSau':
+        return CameraFacing.back;
+      case 'CameraTruoc':
+      default:
+        return CameraFacing.front;
+    }
+  }
+
+  Future<void> _syncPreferredCamera() async {
+    if (!mounted) {
+      return;
+    }
+
+    await widget.qrViewModel.configureScannerFacing(
+      _resolveCameraFacing(
+        widget.indexViewModel.loginViewModel.userLogin?.cameraCheckinThuCong,
+      ),
+    );
   }
 
   @override
