@@ -36,9 +36,17 @@ class _StatisticsPageState extends State<StatisticsPage> {
     return ViewModelBuilder<StatisticsViewModel>.reactive(
       disposeViewModel: false,
       viewModelBuilder: () => _viewModel,
-      onViewModelReady: (viewModel) async {
-        await widget.indexViewModel?.refreshSession(reloadList: false);
-        await viewModel.loadStatistics();
+      onViewModelReady: (viewModel) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (!mounted) {
+            return;
+          }
+          await widget.indexViewModel?.refreshSession(reloadList: false);
+          if (!mounted) {
+            return;
+          }
+          await viewModel.loadStatistics();
+        });
       },
       builder: (context, viewModel, child) {
         final mediaQuery = MediaQuery.of(context);
@@ -267,8 +275,6 @@ class _StatisticMetricsCard extends StatelessWidget {
         final isTablet = constraints.maxWidth >= 600;
         final isSmallTablet =
             constraints.maxWidth >= 600 && constraints.maxWidth < 900;
-        final contentMaxWidth =
-            isTablet ? (isSmallTablet ? 420.0 : 480.0) : null;
 
         return Container(
           margin: const EdgeInsets.only(bottom: 12),

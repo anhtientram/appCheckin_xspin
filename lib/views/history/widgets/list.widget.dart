@@ -6,8 +6,14 @@ import 'package:flutter/material.dart';
 class QRCodeHistoryList extends StatefulWidget {
   final UsersViewModel usersViewModel;
   final List<Users> users;
-  QRCodeHistoryList(
-      {super.key, required this.usersViewModel, required this.users});
+  final bool historyOnly;
+
+  const QRCodeHistoryList({
+    super.key,
+    required this.usersViewModel,
+    required this.users,
+    this.historyOnly = false,
+  });
 
   @override
   State<QRCodeHistoryList> createState() => _QRCodeHistoryListState();
@@ -29,6 +35,7 @@ class _QRCodeHistoryListState extends State<QRCodeHistoryList> {
             },
             usersViewModel: widget.usersViewModel,
             user: widget.users[index],
+            historyOnly: widget.historyOnly,
           );
         }),
       ],

@@ -1,4 +1,5 @@
 import 'package:checkin/app/app_language.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:flutter/material.dart';
 import 'package:checkin/constants/app_color.dart';
@@ -19,7 +20,7 @@ class HomeNavigationBar extends StatefulWidget {
 class _HomeNavigationBarState extends State<HomeNavigationBar> {
   @override
   Widget build(BuildContext context) {
-    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+    final isTablet = context.responsive.isTablet;
     final selectedFontSize = isTablet ? (AppFontSize.sizeSmall ?? 16) : 14.0;
     final unselectedFontSize = isTablet ? (AppFontSize.sizeSmall ?? 16) : 12.0;
     final sideIconSize = isTablet ? 30.0 : 24.0;

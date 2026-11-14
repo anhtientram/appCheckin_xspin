@@ -124,7 +124,6 @@ class ApiLogInterceptor extends Interceptor {
     final url = uri.toString();
     return url.contains('/getListNguoiThamDu') ||
         url.contains('/getListNguoiThamDu_1L') ||
-        url.contains('/getListLichSuCheckin') ||
         url.contains('/getDemSoNguoiThamDu') ||
         url.contains('/getDemSoNguoiThamDu_1L') ||
         url.contains('/getDemSoLuotCheckin');

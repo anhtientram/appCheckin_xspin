@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math' as math;
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:checkin/app/app_route_observer.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/login.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
+import 'package:checkin/views/qr_code/checkin_background_layer.dart';
 import 'package:checkin/views/qr_code/scan_window_barcode_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -29,7 +28,6 @@ class AutoCheckinPage extends StatefulWidget {
 class _AutoCheckinPageState extends State<AutoCheckinPage>
     with WidgetsBindingObserver, RouteAware {
   final QRCodeViewModel _qrViewModel = QRCodeViewModel();
-  final TextEditingController _demoQRCodeController = TextEditingController();
   ModalRoute<dynamic>? _route;
 
   @override
@@ -69,7 +67,6 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
     }
     _qrViewModel.unbindScannerPage();
     unawaited(_qrViewModel.disposeScanner());
-    _demoQRCodeController.dispose();
     super.dispose();
   }
 
@@ -209,8 +206,7 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
       },
       builder: (context, viewModel, child) {
         viewModel.bindScannerPage(context);
-        final mediaQuery = MediaQuery.of(context);
-        final isTablet = mediaQuery.size.shortestSide >= 600;
+        final isTablet = context.responsive.isTablet;
 
         return Scaffold(
           backgroundColor: Colors.black,
@@ -250,7 +246,7 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
                     fit: StackFit.expand,
                     children: [
                       scanner,
-                      _AutoCheckinBackgroundLayer(
+                      CheckinBackgroundLayer(
                         imageQr: loginViewModel.userLogin?.imageQr,
                         cutoutRect: scanWindow,
                       ),
@@ -443,179 +439,6 @@ class _ScanGuideFrame extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _AutoCheckinBackgroundLayer extends StatelessWidget {
-  const _AutoCheckinBackgroundLayer({
-    required this.imageQr,
-    required this.cutoutRect,
-  });
-
-  final String? imageQr;
-  final Rect cutoutRect;
-
-  @override
-  Widget build(BuildContext context) {
-    final backgroundImage = _buildImageProvider();
-    final hasBackgroundImage = backgroundImage != null;
-
-    return IgnorePointer(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          if (hasBackgroundImage)
-            ClipPath(
-              clipper: _InvertedCutoutClipper(cutoutRect),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  ImageFiltered(
-                    imageFilter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        image: DecorationImage(
-                          image: backgroundImage,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: const SizedBox.expand(),
-                    ),
-                  ),
-                  ColoredBox(
-                    color: Colors.black.withValues(alpha: 0.16),
-                  ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: backgroundImage,
-                        fit: BoxFit.contain,
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                    child: const SizedBox.expand(),
-                  ),
-                ],
-              ),
-            ),
-          if (!hasBackgroundImage)
-            ClipPath(
-              clipper: _InvertedCutoutClipper(cutoutRect),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.28),
-                ),
-              ),
-            ),
-          CustomPaint(
-            painter: _ScannerOverlayPainter(
-              cutoutRect,
-              overlayColor: !hasBackgroundImage
-                  ? Colors.black.withValues(alpha: 0.42)
-                  : Colors.black.withValues(alpha: 0.18),
-            ),
-            child: const SizedBox.expand(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ImageProvider<Object>? _buildImageProvider() {
-    final rawImage = imageQr?.trim() ?? '';
-    if (rawImage.isEmpty) {
-      return null;
-    }
-
-    if (rawImage.startsWith('http://') || rawImage.startsWith('https://')) {
-      return NetworkImage(rawImage);
-    }
-
-    final bytes = _tryDecodeImage(rawImage);
-    if (bytes != null) {
-      return MemoryImage(bytes);
-    }
-
-    return null;
-  }
-
-  Uint8List? _tryDecodeImage(String rawImage) {
-    try {
-      final commaIndex = rawImage.indexOf(',');
-      final base64Value = rawImage.startsWith('data:image')
-          ? rawImage.substring(commaIndex + 1)
-          : rawImage;
-      return base64Decode(base64Value);
-    } catch (_) {
-      return null;
-    }
-  }
-}
-
-class _InvertedCutoutClipper extends CustomClipper<Path> {
-  const _InvertedCutoutClipper(this.cutoutRect);
-
-  final Rect cutoutRect;
-
-  @override
-  Path getClip(Size size) {
-    final fullRect = Path()..addRect(Offset.zero & size);
-    final cutoutPath = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          cutoutRect,
-          const Radius.circular(28),
-        ),
-      );
-
-    return Path.combine(
-      PathOperation.difference,
-      fullRect,
-      cutoutPath,
-    );
-  }
-
-  @override
-  bool shouldReclip(covariant _InvertedCutoutClipper oldClipper) {
-    return oldClipper.cutoutRect != cutoutRect;
-  }
-}
-
-class _ScannerOverlayPainter extends CustomPainter {
-  const _ScannerOverlayPainter(
-    this.cutoutRect, {
-    required this.overlayColor,
-  });
-
-  final Rect cutoutRect;
-  final Color overlayColor;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final overlayPaint = Paint()..color = overlayColor;
-    final fullRect = Offset.zero & size;
-    final cutoutRRect = RRect.fromRectAndRadius(
-      cutoutRect,
-      const Radius.circular(28),
-    );
-
-    final fullPath = Path()..addRect(fullRect);
-    final cutoutPath = Path()..addRRect(cutoutRRect);
-    final overlayPath = Path.combine(
-      PathOperation.difference,
-      fullPath,
-      cutoutPath,
-    );
-
-    canvas.drawPath(overlayPath, overlayPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _ScannerOverlayPainter oldDelegate) {
-    return oldDelegate.cutoutRect != cutoutRect ||
-        oldDelegate.overlayColor != overlayColor;
   }
 }
 

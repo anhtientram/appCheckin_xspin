@@ -72,7 +72,11 @@ class _BasePageState extends State<BasePage> {
               ),
             )
           : null,
-      body: widget.body,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: widget.body,
+      ),
       floatingActionButton: widget.showFloating ? widget.floating : null,
       bottomNavigationBar: widget.bottomNav,
       bottomSheet: widget.bottomSheet,

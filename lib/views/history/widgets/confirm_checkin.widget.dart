@@ -1,8 +1,10 @@
 import 'package:checkin/app/app_language.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/model/user.model.dart';
 import 'package:checkin/viewmodel/login.vm.dart';
+import 'package:checkin/views/history/widgets/manual_checkin_success.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -34,12 +36,17 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
       final success = await widget.onConfirm(widget.user);
       if (!mounted) return;
       if (success) {
-        if (widget.onBackToList != null) {
-          await widget.onBackToList!();
-        }
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ManualCheckinSuccessPage(
+              user: widget.user,
+              checkedInAt: DateTime.now(),
+              onContinueCheckin: widget.onBackToList,
+              onBackToList: widget.onBackToList,
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -56,16 +63,33 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
         await loginViewModel.loadUser();
       },
       builder: (context, loginViewModel, child) {
-        final mediaQuery = MediaQuery.of(context);
-        final isTablet = mediaQuery.size.shortestSide >= 600;
-        final maxContentWidth = isTablet ? 620.0 : double.infinity;
-        final pagePadding = isTablet ? 32.0 : 20.0;
-        final titleFontSize = isTablet
-            ? (AppFontSize.sizeLarge ?? 24) + 4
-            : (AppFontSize.sizeLarge ?? 24);
-        final qrFontSize = isTablet
-            ? (AppFontSize.sizeSuperLarge ?? 32) + 2
-            : (AppFontSize.sizeSuperLarge ?? 32);
+        final responsive = context.responsive;
+        final isTablet = responsive.isTablet;
+        final maxContentWidth = responsive.contentMaxWidth(
+          phone: double.infinity,
+          tablet: 900,
+          largeTablet: 1100,
+        );
+        final pagePadding = responsive.value(
+          phone: 20.0,
+          tablet: 36.0,
+          largeTablet: 48.0,
+        );
+        final titleFontSize = responsive.value(
+          phone: AppFontSize.sizeLarge ?? 24,
+          tablet: (AppFontSize.sizeLarge ?? 24) + 6,
+          largeTablet: (AppFontSize.sizeLarge ?? 24) + 10,
+        );
+        final qrFontSize = responsive.value(
+          phone: AppFontSize.sizeSuperLarge ?? 32,
+          tablet: (AppFontSize.sizeSuperLarge ?? 32) + 6,
+          largeTablet: (AppFontSize.sizeSuperLarge ?? 32) + 10,
+        );
+        final buttonFontSize = responsive.value(
+          phone: 16.0,
+          tablet: 19.0,
+          largeTablet: 21.0,
+        );
         final loginConfig = loginViewModel.userLogin;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -137,8 +161,7 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
                                                       fontSize: codeFontSize,
                                                       fontWeight:
                                                           FontWeight.w800,
-                                                      color:
-                                                          AppColor.darkColor,
+                                                      color: AppColor.darkColor,
                                                     ),
                                                   ),
                                                 ],
@@ -219,9 +242,9 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
                                       : Text(
                                           AppLanguage.getText('XacNhan')
                                               .toUpperCase(),
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w800,
-                                            fontSize: 16,
+                                            fontSize: buttonFontSize,
                                           ),
                                         ),
                                 ),
@@ -247,9 +270,9 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
                                   ),
                                   child: Text(
                                     AppLanguage.getText('Dong').toUpperCase(),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 16,
+                                      fontSize: buttonFontSize,
                                     ),
                                   ),
                                 ),

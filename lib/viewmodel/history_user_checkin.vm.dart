@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_sp.dart';
 import 'package:checkin/app/app_sp_key.dart';
+import 'package:checkin/base/app_dialog.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/model/count_users.dart';
 import 'package:checkin/model/user.model.dart';
@@ -300,6 +301,11 @@ class HistoryCheckinViewModel extends BaseViewModel {
   void _showCheckInFailedDialog(String message) {
     AwesomeDialog(
       context: viewContext,
+      dialogBackgroundColor: AppDialog.backgroundColor,
+      width: AppDialog.width(viewContext),
+      dialogBorderRadius: AppDialog.borderRadius(viewContext),
+      padding: AppDialog.padding(viewContext),
+      bodyHeaderDistance: AppDialog.bodyHeaderDistance(viewContext),
       dialogType: DialogType.error,
       animType: AnimType.topSlide,
       title: AppLanguage.getText('ThongBao'),

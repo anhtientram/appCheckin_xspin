@@ -1,8 +1,8 @@
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_sp.dart';
 import 'package:checkin/app/app_sp_key.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
-import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/model/user.model.dart';
 import 'package:checkin/viewmodel/history_users.vm.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,16 @@ import 'package:flutter/material.dart';
 class ItemTicketQR extends StatefulWidget {
   final VoidCallback onTap;
   final Users user;
-  UsersViewModel usersViewModel;
-  ItemTicketQR(
-      {super.key,
-      required this.onTap,
-      required this.user,
-      required this.usersViewModel});
+  final UsersViewModel usersViewModel;
+  final bool historyOnly;
+
+  const ItemTicketQR({
+    super.key,
+    required this.onTap,
+    required this.user,
+    required this.usersViewModel,
+    this.historyOnly = false,
+  });
 
   @override
   State<ItemTicketQR> createState() => _ItemTicketQRState();
@@ -25,116 +29,146 @@ class _ItemTicketQRState extends State<ItemTicketQR> {
   bool get _isManualCheckin =>
       AppSP.get(AppSPKey.isCheckinThuCong)?.toString() == '1';
 
-  Color get _maQrColor =>
-      widget.user.hasCheckedIn ? AppColor.successQRCode : AppColor.primaryColor;
+  bool get _checkedIn => widget.user.hasCheckedIn;
+
+  Color get _accentColor =>
+      _checkedIn ? AppColor.successQRCode : AppColor.primaryColor;
+
+  ({String time, String date}) get _dateTimeParts {
+    final raw =
+        (widget.user.ngayCheckin ?? widget.user.thoiDiemCheckin ?? '').trim();
+    if (raw.isEmpty) return (time: '', date: '');
+
+    final parsed = DateTime.tryParse(raw.replaceFirst(' ', 'T'));
+    if (parsed != null) {
+      return (
+        time:
+            '${parsed.hour.toString().padLeft(2, '0')}:${parsed.minute.toString().padLeft(2, '0')}',
+        date:
+            '${parsed.day.toString().padLeft(2, '0')}/${parsed.month.toString().padLeft(2, '0')}/${parsed.year}',
+      );
+    }
+
+    final parts = raw.split(' ');
+    final rawTime = parts.length > 1 ? parts.last : '';
+    return (
+      time: rawTime.length > 5 ? rawTime.substring(0, 5) : rawTime,
+      date: parts.isNotEmpty ? parts.first : raw,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final showManualActions = _isManualCheckin && widget.user.canManualCheckIn;
-    final accentColor = _maQrColor;
+    final responsive = context.responsive;
+    final showManualActions =
+        !widget.historyOnly && _isManualCheckin && widget.user.canManualCheckIn;
+    final title = (widget.user.field2 ?? '').trim();
+    final dateTime = _dateTimeParts;
 
     return InkWell(
-      onTap: showManualActions ? null : widget.onTap,
-      borderRadius: BorderRadius.circular(12),
+      onTap: widget.historyOnly || showManualActions ? null : widget.onTap,
+      borderRadius:
+          BorderRadius.circular(responsive.value(phone: 18, tablet: 22)),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        margin: EdgeInsets.symmetric(
+          vertical: responsive.value(phone: 5, tablet: 7),
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(
+            responsive.value(phone: 18, tablet: 22),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              blurRadius: responsive.value(phone: 8, tablet: 12),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(
+            responsive.value(phone: 18, tablet: 22),
+          ),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(width: 4, color: accentColor),
+                Container(
+                  width: responsive.value(phone: 4, tablet: 5),
+                  color: _accentColor,
+                ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.fromLTRB(
+                      responsive.value(phone: 16, tablet: 22),
+                      responsive.value(phone: 14, tablet: 18),
+                      responsive.value(phone: 14, tablet: 20),
+                      responsive.value(phone: 14, tablet: 18),
+                    ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              flex: 4,
+                              flex: widget.historyOnly ? 6 : 4,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     widget.user.maQR,
                                     style: TextStyle(
-                                      fontSize: AppFontSize.sizeSuperSmall,
-                                      fontWeight: AppFontWeight.bold,
-                                      color: accentColor,
+                                      color: _accentColor,
+                                      fontSize: responsive.value(
+                                          phone: 13, tablet: 17),
+                                      fontWeight: FontWeight.w700,
                                     ),
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
                                   ),
-                                  const SizedBox(height: 5),
+                                  SizedBox(
+                                    height:
+                                        responsive.value(phone: 5, tablet: 7),
+                                  ),
                                   Text(
-                                    widget.user.field2 ?? '',
+                                    title.isEmpty ? widget.user.maQR : title,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: AppFontWeight.bold,
+                                      color: AppColor.darkColor,
+                                      fontSize: responsive.value(
+                                          phone: 18, tablet: 24),
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.12,
                                     ),
-                                    maxLines: 2,
                                   ),
                                 ],
                               ),
                             ),
+                            SizedBox(
+                              width: responsive.value(phone: 10, tablet: 18),
+                            ),
                             Expanded(
-                              flex: 6,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '${AppLanguage.getText('LuotCheckinToiDa')}: ${widget.user.soLuotCheckIntoida ?? 0}',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                      fontSize: AppFontSize.sizeStatus,
-                                      color: AppColor.oriColor,
-                                      fontWeight: FontWeight.bold,
+                              flex: widget.historyOnly ? 4 : 6,
+                              child: widget.historyOnly
+                                  ? _HistoryDateTime(
+                                      responsive: responsive,
+                                      time: dateTime.time,
+                                      date: dateTime.date,
+                                    )
+                                  : _CheckinStats(
+                                      responsive: responsive,
+                                      user: widget.user,
                                     ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    '${AppLanguage.getText('DaCheckin')}: ${widget.user.dacheckIn ?? 0}',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                      fontSize: AppFontSize.sizeStatus,
-                                      color: AppColor.successQRCode,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    '${AppLanguage.getText('ChuaCheckin')}: ${widget.user.chuaCheckin ?? 0}',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                      fontSize: AppFontSize.sizeStatus,
-                                      color: AppColor.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
                           ],
                         ),
                         if (showManualActions) ...[
-                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: responsive.value(phone: 10, tablet: 14),
+                          ),
                           Row(
                             children: [
                               OutlinedButton(
@@ -146,34 +180,50 @@ class _ItemTicketQRState extends State<ItemTicketQR> {
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColor.primaryColor,
                                   side: BorderSide(
-                                    color: AppColor.primaryColor,
-                                    width: 1.5,
+                                    color: AppColor.primaryColor
+                                        .withValues(alpha: 0.45),
+                                    width: 1.2,
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        responsive.value(phone: 16, tablet: 24),
+                                    vertical:
+                                        responsive.value(phone: 9, tablet: 13),
                                   ),
                                   minimumSize: Size.zero,
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(
+                                      responsive.value(phone: 11, tablet: 14),
+                                    ),
                                   ),
                                 ),
                                 child: Text(
                                   AppLanguage.getText('Checkin'),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w700,
+                                    fontSize:
+                                        responsive.value(phone: 14, tablet: 17),
                                   ),
                                 ),
                               ),
                               const Spacer(),
                               IconButton(
-                                tooltip: AppLanguage.getText('XemChiTiet'),
                                 onPressed: widget.onTap,
+                                padding: EdgeInsets.zero,
+                                constraints: BoxConstraints.tightFor(
+                                  width:
+                                      responsive.value(phone: 36, tablet: 46),
+                                  height:
+                                      responsive.value(phone: 36, tablet: 46),
+                                ),
+                                tooltip: AppLanguage.getText('XemChiTiet'),
                                 icon: Icon(
                                   Icons.visibility_outlined,
-                                  color: AppColor.darkColor.withValues(alpha: 0.4),
+                                  size: responsive.value(phone: 20, tablet: 28),
+                                  color: AppColor.darkColor
+                                      .withValues(alpha: 0.38),
                                 ),
                               ),
                             ],
@@ -188,6 +238,98 @@ class _ItemTicketQRState extends State<ItemTicketQR> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HistoryDateTime extends StatelessWidget {
+  final AppResponsive responsive;
+  final String time;
+  final String date;
+
+  const _HistoryDateTime({
+    required this.responsive,
+    required this.time,
+    required this.date,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        if (time.isNotEmpty)
+          Text(
+            time,
+            style: TextStyle(
+              color: AppColor.darkColor,
+              fontSize: responsive.value(phone: 20, tablet: 26),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        if (date.isNotEmpty)
+          Text(
+            date,
+            style: TextStyle(
+              color: const Color(0xFF929292),
+              fontSize: responsive.value(phone: 13, tablet: 17),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _CheckinStats extends StatelessWidget {
+  final AppResponsive responsive;
+  final Users user;
+
+  const _CheckinStats({
+    required this.responsive,
+    required this.user,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textSize = responsive.value(phone: 13.0, tablet: 17.0);
+    final lineGap = responsive.value(phone: 5.0, tablet: 8.0);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          '${AppLanguage.getText('LuotCheckinToiDa')}: ${user.soLuotCheckIntoida ?? 0}',
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            fontSize: textSize,
+            color: const Color(0xFF777777),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(height: lineGap),
+        Text(
+          '${AppLanguage.getText('DaCheckin')}: ${user.dacheckIn ?? 0}',
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            fontSize: textSize,
+            color: AppColor.successQRCode,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: lineGap),
+        Text(
+          '${AppLanguage.getText('ChuaCheckin')}: ${user.chuaCheckin ?? 0}',
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            fontSize: textSize,
+            color: AppColor.primaryColor,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }

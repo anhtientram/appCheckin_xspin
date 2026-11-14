@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_route_observer.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/base/base_page.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
+import 'package:checkin/views/qr_code/checkin_background_layer.dart';
 import 'package:checkin/views/qr_code/scan_window_barcode_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -140,8 +142,7 @@ class _QrCodePageState extends State<QrCodePage>
     final qrCode = _demoQRCodeController.text.trim();
     if (qrCode.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(AppLanguage.getText('VuiLongNhapMaQRDemo'))),
+        SnackBar(content: Text(AppLanguage.getText('VuiLongNhapMaQRDemo'))),
       );
       return;
     }
@@ -164,9 +165,7 @@ class _QrCodePageState extends State<QrCodePage>
         });
       },
       builder: (context, viewModel, child) {
-        final mediaQuery = MediaQuery.of(context);
-        final isTablet = mediaQuery.size.shortestSide >= 600;
-        final bottomInset = mediaQuery.viewInsets.bottom;
+        final isTablet = context.responsive.isTablet;
         final scanAreaSize = isTablet ? 320.0 : 250.0;
 
         viewModel.bindScannerPage(context);
@@ -237,9 +236,13 @@ class _QrCodePageState extends State<QrCodePage>
                                   }
                                 },
                               ),
+                              CheckinBackgroundLayer(
+                                imageQr: widget.indexViewModel.loginViewModel
+                                    .userLogin?.imageQr,
+                                cutoutRect: scanWindow,
+                              ),
                               QRScannerOverlay(
-                                overlayColor:
-                                    Colors.black.withValues(alpha: 0.5),
+                                overlayColor: Colors.transparent,
                                 scanAreaSize: Size(scanArea, scanArea),
                               ),
                             ],

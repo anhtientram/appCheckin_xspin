@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:checkin/base/app_responsive.dart';
 import 'package:flutter/material.dart';
 
 class AppFontSize {
@@ -14,19 +15,7 @@ class AppFontSize {
   static double? sizeStatus = 13;
 
   static double deviceTextScale(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final shortestSide = size.shortestSide;
-
-    if (shortestSide >= 1000) {
-      return 1.4;
-    }
-    if (shortestSide >= 820) {
-      return 1.32;
-    }
-    if (shortestSide >= 600) {
-      return 1.25;
-    }
-    return 1.0;
+    return context.responsive.deviceTextScale;
   }
 
   static double effectiveTextScale(BuildContext context) {

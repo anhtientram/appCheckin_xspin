@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:checkin/app/app_language.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
@@ -56,8 +57,7 @@ class _FailedQrCodeState extends State<FailedQrCode> {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isTablet = mediaQuery.size.shortestSide >= 600;
+    final isTablet = context.responsive.isTablet;
 
     return SafeArea(
       child: Scaffold(
@@ -116,7 +116,7 @@ class _FailedQrCodeState extends State<FailedQrCode> {
                   // Continue Button
                   if (widget.autoClose)
                     Text(
-                      AppLanguage.getText('TuDongDongSau3Giay'),
+                      AppLanguage.getText('TuDongDongSau'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: isTablet

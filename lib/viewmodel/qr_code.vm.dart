@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_sp.dart';
 import 'package:checkin/app/app_sp_key.dart';
+import 'package:checkin/base/app_dialog.dart';
 
 import 'package:checkin/model/user.model.dart';
 import 'package:checkin/requests/history_user.requets.dart';
@@ -475,6 +476,18 @@ class QRCodeViewModel extends BaseViewModel {
     await _showResultPage(SuccessScreenQR(qrCodeViewModel: this));
   }
 
+  Duration _automaticSuccessCloseDuration() {
+    final configuredSeconds = int.tryParse(
+      indexViewModel.loginViewModel.userLogin?.soGiayTuDong?.trim() ?? '',
+    );
+
+    if (configuredSeconds == null || configuredSeconds <= 0) {
+      return const Duration(milliseconds: 2500);
+    }
+
+    return Duration(seconds: configuredSeconds);
+  }
+
   Future<void> showAutomaticResult({
     required bool isSuccess,
     String? description,
@@ -484,6 +497,7 @@ class QRCodeViewModel extends BaseViewModel {
           ? SuccessScreenQR(
               qrCodeViewModel: this,
               autoClose: true,
+              autoCloseDuration: _automaticSuccessCloseDuration(),
             )
           : FailedQrCode(
               qrCodeViewModel: this,
@@ -499,6 +513,11 @@ class QRCodeViewModel extends BaseViewModel {
   void showQRCodeAlreadyScannedDialog(BuildContext context, String desc) {
     AwesomeDialog(
       context: context,
+      dialogBackgroundColor: AppDialog.backgroundColor,
+      width: AppDialog.width(context),
+      dialogBorderRadius: AppDialog.borderRadius(context),
+      padding: AppDialog.padding(context),
+      bodyHeaderDistance: AppDialog.bodyHeaderDistance(context),
       dialogType: DialogType.info,
       animType: AnimType.topSlide,
       title: AppLanguage.getText('MaDaQuet'),
@@ -514,6 +533,11 @@ class QRCodeViewModel extends BaseViewModel {
   void showQRCodeFailed(BuildContext context, String desc) {
     AwesomeDialog(
       context: context,
+      dialogBackgroundColor: AppDialog.backgroundColor,
+      width: AppDialog.width(context),
+      dialogBorderRadius: AppDialog.borderRadius(context),
+      padding: AppDialog.padding(context),
+      bodyHeaderDistance: AppDialog.bodyHeaderDistance(context),
       dialogType: DialogType.error,
       animType: AnimType.topSlide,
       title: AppLanguage.getText('QRCodeKhongTonTai'),

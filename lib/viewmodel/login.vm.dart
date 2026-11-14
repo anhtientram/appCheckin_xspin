@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_sp.dart';
 import 'package:checkin/app/app_sp_key.dart';
+import 'package:checkin/base/app_dialog.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/model/login.model.dart';
 import 'package:checkin/model/user.model.dart';
@@ -140,6 +141,11 @@ class LoginViewModel extends BaseViewModel {
   void showLogOut(BuildContext context) {
     AwesomeDialog(
       context: context,
+      dialogBackgroundColor: AppDialog.backgroundColor,
+      width: AppDialog.width(context),
+      dialogBorderRadius: AppDialog.borderRadius(context),
+      padding: AppDialog.padding(context),
+      bodyHeaderDistance: AppDialog.bodyHeaderDistance(context),
       dialogType: DialogType.question,
       animType: AnimType.topSlide,
       showCloseIcon: true,
@@ -171,6 +177,11 @@ class LoginViewModel extends BaseViewModel {
   void showSignInFailedDialog(BuildContext context, String desc) {
     AwesomeDialog(
       context: viewContext,
+      dialogBackgroundColor: AppDialog.backgroundColor,
+      width: AppDialog.width(viewContext),
+      dialogBorderRadius: AppDialog.borderRadius(viewContext),
+      padding: AppDialog.padding(viewContext),
+      bodyHeaderDistance: AppDialog.bodyHeaderDistance(viewContext),
       dialogType: DialogType.error,
       animType: AnimType.topSlide,
       showCloseIcon: true,

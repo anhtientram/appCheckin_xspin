@@ -23,6 +23,7 @@ class AppLanguage {
 
     // Status & Counts
     'TongLuot': 'Tổng lượt',
+    'Luot': 'lượt',
     'DaCheckin': 'Đã check-in',
     'ChuaCheckin': 'Chưa check-in',
     'DaCheckinXong': 'Đã check-in xong',
@@ -84,12 +85,19 @@ class AppLanguage {
     // Actions & Buttons
     'Huy': 'Hủy',
     'TimKiem': 'Tìm kiếm',
+    'TimKiemTheoTenHoacMaQR': 'Tìm theo tên hoặc mã QR...',
     'ThongTin': 'Thông tin',
     'ThongBao': 'Thông báo',
     'TiepTucCheckIn': 'TIẾP TỤC CHECK IN',
     'QuayLaiDanhSach': 'QUAY LẠI DANH SÁCH',
-    'TuDongDongSau3Giay': 'Tự động đóng sau 3 giây....',
+    'TiepTucCheckinThanhCong': 'Tiếp tục check-in',
+    'QuayLaiDanhSachThanhCong': 'Quay lại danh sách',
+    'HoTen': 'Họ tên',
+    'SoDienThoai': 'Số điện thoại',
+    'KhuVuc': 'Khu vực',
+    'TuDongDongSau': 'Tự động đóng sau',
     'XemThem': 'Xem thêm',
+    'ChuaCoDuLieuCheckin': 'Chưa có dữ liệu check-in',
 
     // Errors & Scanner messages
     'HayDuaMaQRVaoGiuaKhung': 'Hãy đưa mã QR vào giữa khung',

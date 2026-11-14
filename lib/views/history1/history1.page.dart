@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:checkin/app/app_language.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/base/base_page.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/model/user.model.dart';
 import 'package:checkin/viewmodel/history_user_checkin.vm.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
-import 'package:checkin/views/history/widgets/history_sum_bar.widget.dart';
 import 'package:checkin/views/history1/widgets/list.widget.dart';
+import 'package:checkin/views/history1/widgets/one_time_summary.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -109,101 +110,164 @@ class _HistoryPage1State extends State<HistoryPage1>
         },
         builder: (context, viewModel, child) {
           viewModel.viewContext = context;
+          final responsive = context.responsive;
+          final totalCount = viewModel.count?.countData ?? 0;
+          final checkedInCount = viewModel.countCheckin?.countData ?? 0;
+          final notCheckedInCount =
+              (totalCount - checkedInCount).clamp(0, totalCount).toInt();
 
           return BasePage(
-              showFloating: true,
-              showLogo: true,
-              floating: _isScrollToTopButtonVisible
-                  ? FloatingActionButton(
-                      onPressed: () {
-                        _scrollController.animateTo(
-                          0,
-                          duration: Duration(milliseconds: 700),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: Icon(
-                        Icons.arrow_upward,
-                        color: AppColor.darkColor,
-                        size: 28,
-                      ),
-                      backgroundColor: AppColor.unSelectColor.withOpacity(0.5),
-                    )
-                  : null,
-              title: AppLanguage.getText('NguoiThamDu'),
-              body: RefreshIndicator(
+            showFloating: true,
+            showLogo: true,
+            floating: _isScrollToTopButtonVisible
+                ? FloatingActionButton(
+                    onPressed: () {
+                      _scrollController.animateTo(
+                        0,
+                        duration: Duration(milliseconds: 700),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Icon(
+                      Icons.arrow_upward,
+                      color: AppColor.darkColor,
+                      size: 28,
+                    ),
+                    backgroundColor:
+                        AppColor.unSelectColor.withValues(alpha: 0.5),
+                  )
+                : null,
+            title: AppLanguage.getText('NguoiThamDu'),
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFFF8F3F1), Colors.white],
+                ),
+              ),
+              child: RefreshIndicator(
                 onRefresh: _refreshData,
                 color: AppColor.primaryColor,
                 child: ListView(
                   controller: _scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.fromLTRB(
+                    responsive.value(phone: 8, tablet: 18, largeTablet: 26),
+                    responsive.value(phone: 8, tablet: 14, largeTablet: 20),
+                    responsive.value(phone: 8, tablet: 18, largeTablet: 26),
+                    responsive.value(phone: 18, tablet: 24, largeTablet: 30),
+                  ),
                   children: [
-                    HistorySumBar(
+                    OneTimeCheckinSummary(
+                      totalCount: totalCount,
+                      checkedInCount: checkedInCount,
+                      notCheckedInCount: notCheckedInCount,
                       isBusy: viewModel.isBusy,
-                      totalValue:
-                          '${widget.usersViewModel.count?.countData ?? 0}',
-                      checkedInValue:
-                          '${widget.usersViewModel.countCheckin?.countData ?? 0}',
-                      notCheckedInValue:
-                          '${(widget.usersViewModel.count?.countData ?? 0) - (widget.usersViewModel.countCheckin?.countData ?? 0)}',
+                    ),
+                    const SizedBox(height: 12),
+                    OneTimeCheckinFilters(
                       selectedIndex: _tabController.index,
+                      totalCount: totalCount,
+                      checkedInCount: checkedInCount,
+                      notCheckedInCount: notCheckedInCount,
                       onTap: (index) {
                         _tabController.animateTo(index);
                         setState(() {});
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                            hintText: 'Tìm kiếm theo tên hoặc mã QR',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColor.primaryColor,
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: AppLanguage.getText(
+                          'TimKiemTheoTenHoacMaQR',
+                          fallback: 'Tìm theo tên hoặc mã QR...',
+                        ),
+                        hintStyle: TextStyle(
+                          color: const Color(0xFF92959B),
+                          fontSize: responsive.value(phone: 15, tablet: 19),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: const Color(0xFF7D838B),
+                          size: responsive.value(phone: 25, tablet: 31),
+                        ),
+                        suffixIcon: _searchController.text.isEmpty
+                            ? null
+                            : IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: _searchController.clear,
                               ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColor.primaryColor,
-                              ),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.search,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () {
-                                _searchController.clear();
-                              },
-                            )),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: responsive.value(phone: 14, tablet: 19),
+                          horizontal: 16,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(17),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE4E1DE),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(17),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFE4E1DE),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(17),
+                          borderSide: BorderSide(
+                            color: AppColor.primaryColor,
+                            width: 1.3,
+                          ),
+                        ),
                       ),
                     ),
+                    const SizedBox(height: 8),
                     viewModel.isBusy
                         ? Padding(
                             padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.width * 0.2),
+                              top: responsive.value(
+                                phone: 70,
+                                tablet: 130,
+                                largeTablet: 170,
+                              ),
+                            ),
                             child: Center(
                               child: LoadingAnimationWidget.threeRotatingDots(
                                 color: AppColor.primaryColor,
-                                size: 50,
+                                size: responsive.value(phone: 42, tablet: 52),
                               ),
                             ),
                           )
                         : AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
-                            child: _tabController.index == 0
-                                ? buildUserList(viewModel.lstUsers, 'allTab')
-                                : _tabController.index == 1
-                                    ? buildUserList(
-                                        viewModel.checkInUser, 'checkedInTab')
-                                    : buildUserList(viewModel.notCheckIntUser,
-                                        'notCheckedInTab'),
+                            duration: const Duration(milliseconds: 260),
+                            child: KeyedSubtree(
+                              key: ValueKey(_tabController.index),
+                              child: _tabController.index == 0
+                                  ? buildUserList(
+                                      viewModel.lstUsers,
+                                      'allTab',
+                                    )
+                                  : _tabController.index == 1
+                                      ? buildUserList(
+                                          viewModel.checkInUser,
+                                          'checkedInTab',
+                                        )
+                                      : buildUserList(
+                                          viewModel.notCheckIntUser,
+                                          'notCheckedInTab',
+                                        ),
+                            ),
                           ),
                   ],
                 ),
               ),
-            );
+            ),
+          );
         });
   }
 

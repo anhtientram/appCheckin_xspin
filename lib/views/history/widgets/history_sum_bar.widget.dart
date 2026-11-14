@@ -1,4 +1,5 @@
 import 'package:checkin/app/app_language.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -32,9 +33,9 @@ class HistorySumBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shortestSide = MediaQuery.sizeOf(context).shortestSide;
-    final isTablet = shortestSide >= 600;
-    final isCompact = shortestSide < 360;
+    final responsive = context.responsive;
+    final isTablet = responsive.isTablet;
+    final isCompact = responsive.isCompactPhone;
     final isSelectable = onTap != null;
 
     final topPadding = isTablet ? 20.0 : (isCompact ? 12.0 : 16.0);

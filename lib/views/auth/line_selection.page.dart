@@ -1,6 +1,7 @@
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_sp.dart';
 import 'package:checkin/app/app_sp_key.dart';
+import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/model/line_checkin.model.dart';
@@ -119,6 +120,7 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = context.responsive;
     final accentBackground = const Color(0xFFF7E4E7);
     final accentDark = const Color(0xFF7A1621);
 
@@ -138,10 +140,11 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
           widget.allowBack
               ? AppLanguage.getText('DoiLine')
               : AppLanguage.getText('LineCheckin'),
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Inter',
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: responsive.value(phone: 20, tablet: 25),
           ),
         ),
       ),
@@ -158,12 +161,14 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(
+              responsive.value(phone: 16, tablet: 24, largeTablet: 30),
+            ),
             child: _isLoading
                 ? Center(
                     child: LoadingAnimationWidget.threeRotatingDots(
                       color: AppColor.primaryColor,
-                      size: 50,
+                      size: responsive.value(phone: 50, tablet: 62),
                     ),
                   )
                 : Column(
@@ -171,7 +176,10 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                     children: [
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(18),
+                        padding: EdgeInsets.all(
+                          responsive.value(
+                              phone: 18, tablet: 28, largeTablet: 34),
+                        ),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -179,7 +187,9 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                               accentDark,
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(
+                            responsive.value(phone: 24, tablet: 30),
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color:
@@ -193,36 +203,50 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(
+                                responsive.value(phone: 10, tablet: 14),
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.14),
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(
+                                  responsive.value(phone: 16, tablet: 20),
+                                ),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.alt_route_rounded,
                                 color: Colors.white,
-                                size: 26,
+                                size: responsive.value(phone: 26, tablet: 34),
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(
+                              height: responsive.value(phone: 16, tablet: 22),
+                            ),
                             Text(
                               widget.allowBack
                                   ? AppLanguage.getText('DoiLine')
                                   : AppLanguage.getText('LineCheckin'),
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: AppFontSize.sizeLarge,
+                                fontSize: responsive.value(
+                                  phone: AppFontSize.sizeLarge ?? 24,
+                                  tablet: 30,
+                                ),
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(
+                              height: responsive.value(phone: 8, tablet: 12),
+                            ),
                             Text(
                               AppLanguage.getText(
                                   'BanVuiLongChonLineCheckinPhuHop'),
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: AppFontSize.sizeSmall,
+                                fontSize: responsive.value(
+                                  phone: AppFontSize.sizeSmall ?? 16,
+                                  tablet: 20,
+                                ),
                                 color: Colors.white.withValues(alpha: 0.88),
                                 height: 1.45,
                               ),
@@ -230,15 +254,21 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                             if ((AppSP.get(AppSPKey.tenTK) ?? '')
                                 .toString()
                                 .isNotEmpty) ...[
-                              const SizedBox(height: 12),
+                              SizedBox(
+                                height: responsive.value(phone: 12, tablet: 16),
+                              ),
                               Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      responsive.value(phone: 10, tablet: 14),
+                                  vertical:
+                                      responsive.value(phone: 6, tablet: 9),
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(
+                                    responsive.value(phone: 14, tablet: 18),
+                                  ),
                                 ),
                                 child: Text(
                                   '${AppLanguage.getText('SuKien')}: ${AppSP.get(AppSPKey.tenTK) ?? ''}',
@@ -253,7 +283,9 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 18),
+                      SizedBox(
+                        height: responsive.value(phone: 18, tablet: 24),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Row(
@@ -262,16 +294,20 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                               AppLanguage.getText('DanhSachLine'),
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: AppFontSize.sizeMedium,
+                                fontSize: responsive.value(
+                                  phone: AppFontSize.sizeMedium ?? 20,
+                                  tablet: 25,
+                                ),
                                 fontWeight: FontWeight.w800,
                                 color: accentDark,
                               ),
                             ),
                             const Spacer(),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    responsive.value(phone: 10, tablet: 14),
+                                vertical: responsive.value(phone: 6, tablet: 9),
                               ),
                               decoration: BoxDecoration(
                                 color: accentBackground,
@@ -289,7 +325,9 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: responsive.value(phone: 12, tablet: 16),
+                      ),
                       Expanded(
                         child: _lines.isEmpty
                             ? Center(
@@ -308,8 +346,10 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                               )
                             : ListView.separated(
                                 itemCount: _lines.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: 12),
+                                separatorBuilder: (_, __) => SizedBox(
+                                  height:
+                                      responsive.value(phone: 12, tablet: 16),
+                                ),
                                 itemBuilder: (context, index) {
                                   final line = _lines[index];
                                   final isSelected =
@@ -318,7 +358,9 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                     duration: const Duration(milliseconds: 180),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(22),
+                                      borderRadius: BorderRadius.circular(
+                                        responsive.value(phone: 22, tablet: 28),
+                                      ),
                                       border: Border.all(
                                         color: isSelected
                                             ? AppColor.primaryColor
@@ -341,7 +383,10 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        borderRadius: BorderRadius.circular(22),
+                                        borderRadius: BorderRadius.circular(
+                                          responsive.value(
+                                              phone: 22, tablet: 28),
+                                        ),
                                         onTap: () {
                                           setState(() {
                                             _selectedLineId =
@@ -349,18 +394,26 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                           });
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: EdgeInsets.all(
+                                            responsive.value(
+                                                phone: 16, tablet: 24),
+                                          ),
                                           child: Row(
                                             children: [
                                               Container(
-                                                width: 48,
-                                                height: 48,
+                                                width: responsive.value(
+                                                    phone: 48, tablet: 62),
+                                                height: responsive.value(
+                                                    phone: 48, tablet: 62),
                                                 decoration: BoxDecoration(
                                                   color: isSelected
                                                       ? AppColor.primaryColor
                                                       : accentBackground,
                                                   borderRadius:
-                                                      BorderRadius.circular(16),
+                                                      BorderRadius.circular(
+                                                    responsive.value(
+                                                        phone: 16, tablet: 20),
+                                                  ),
                                                 ),
                                                 child: Icon(
                                                   Icons.qr_code_rounded,
@@ -369,7 +422,10 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                                       : accentDark,
                                                 ),
                                               ),
-                                              const SizedBox(width: 14),
+                                              SizedBox(
+                                                width: responsive.value(
+                                                    phone: 14, tablet: 20),
+                                              ),
                                               Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -380,10 +436,14 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w800,
-                                                        fontSize: (AppFontSize
-                                                                    .sizeMedium ??
-                                                                20) -
-                                                            1,
+                                                        fontSize:
+                                                            responsive.value(
+                                                          phone: (AppFontSize
+                                                                      .sizeMedium ??
+                                                                  20) -
+                                                              1,
+                                                          tablet: 25,
+                                                        ),
                                                         color: const Color(
                                                           0xFF211A19,
                                                         ),
@@ -401,13 +461,18 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(width: 12),
+                                              SizedBox(
+                                                width: responsive.value(
+                                                    phone: 12, tablet: 18),
+                                              ),
                                               AnimatedContainer(
                                                 duration: const Duration(
                                                   milliseconds: 180,
                                                 ),
-                                                width: 28,
-                                                height: 28,
+                                                width: responsive.value(
+                                                    phone: 28, tablet: 36),
+                                                height: responsive.value(
+                                                    phone: 28, tablet: 36),
                                                 decoration: BoxDecoration(
                                                   color: isSelected
                                                       ? AppColor.primaryColor
@@ -421,7 +486,8 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                                 ),
                                                 child: Icon(
                                                   Icons.check,
-                                                  size: 16,
+                                                  size: responsive.value(
+                                                      phone: 16, tablet: 21),
                                                   color: isSelected
                                                       ? Colors.white
                                                       : Colors.transparent,
@@ -436,7 +502,9 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                 },
                               ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: responsive.value(phone: 16, tablet: 22),
+                      ),
                       SizedBox(
                         width: double.infinity,
                         child: DecoratedBox(
@@ -447,7 +515,9 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                 accentDark,
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(
+                              responsive.value(phone: 18, tablet: 22),
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: AppColor.primaryColor
@@ -464,9 +534,14 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                               shadowColor: Colors.transparent,
                               backgroundColor: Colors.transparent,
                               disabledBackgroundColor: Colors.transparent,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              padding: EdgeInsets.symmetric(
+                                vertical:
+                                    responsive.value(phone: 16, tablet: 21),
+                              ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(
+                                  responsive.value(phone: 18, tablet: 22),
+                                ),
                               ),
                             ),
                             child: _isSubmitting
@@ -483,10 +558,11 @@ class _LineSelectionPageState extends State<LineSelectionPage> {
                                         ? AppLanguage.getText('LuuThayDoiLine')
                                         : AppLanguage.getText(
                                             'XacNhanLineCheckin'),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontFamily: 'Inter',
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800,
+                                      fontSize: 17,
                                     ),
                                   ),
                           ),
