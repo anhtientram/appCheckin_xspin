@@ -183,13 +183,24 @@ class _HistoryPageState extends State<HistoryPage>
                     _buildSearchField(responsive)
                   else
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(child: _buildSearchField(responsive)),
+                        Expanded(
+                          child: SizedBox(
+                            height: responsive.value(
+                                phone: 48, tablet: 60, largeTablet: 66),
+                            child: _buildSearchField(responsive),
+                          ),
+                        ),
                         SizedBox(
                           width: responsive.value(phone: 10, tablet: 16),
                         ),
                         Expanded(
-                          child: _buildStatusDropdown(viewModel, responsive),
+                          child: SizedBox(
+                            height: responsive.value(
+                                phone: 48, tablet: 60, largeTablet: 66),
+                            child: _buildStatusDropdown(viewModel, responsive),
+                          ),
                         ),
                       ],
                     ),
@@ -292,13 +303,18 @@ class _HistoryPageState extends State<HistoryPage>
   ) {
     return DropdownButtonFormField2<String>(
       isExpanded: true,
+      alignment: AlignmentDirectional.centerStart,
       value: viewModel.selectedStatus,
+      buttonStyleData: ButtonStyleData(
+        height: responsive.value(phone: 48, tablet: 60, largeTablet: 66),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+      ),
       decoration: InputDecoration(
         hintText: AppLanguage.getText('TatCa'),
         filled: true,
         fillColor: Colors.white,
         contentPadding: EdgeInsets.symmetric(
-          vertical: responsive.value(phone: 12, tablet: 18),
+          vertical: 0,
           horizontal: 14,
         ),
         border: OutlineInputBorder(
@@ -323,17 +339,23 @@ class _HistoryPageState extends State<HistoryPage>
       items: [
         DropdownMenuItem<String>(
           value: 'all',
+          alignment: AlignmentDirectional.centerStart,
           child: Text(
             AppLanguage.getText('TatCa'),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
             style: TextStyle(
               color: AppColor.darkColor,
               fontSize: responsive.value(phone: 14, tablet: 18),
+              height: 1.2,
             ),
           ),
         ),
         ...viewModel.userStatus.map(
           (status) => DropdownMenuItem<String>(
             value: status.idStatus,
+            alignment: AlignmentDirectional.centerStart,
             child: Text(
               AppLanguage.getText(
                 status.idStatus ?? '',
@@ -341,9 +363,11 @@ class _HistoryPageState extends State<HistoryPage>
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 color: AppColor.darkColor,
                 fontSize: responsive.value(phone: 14, tablet: 18),
+                height: 1.2,
               ),
             ),
           ),
@@ -368,6 +392,8 @@ class _HistoryPageState extends State<HistoryPage>
     String tabKey, {
     bool historyOnly = false,
   }) {
+    final responsive = context.responsive;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -408,6 +434,15 @@ class _HistoryPageState extends State<HistoryPage>
                     ),
             ),
           ),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: responsive.value(
+              phone: 50,
+              tablet: 68,
+              largeTablet: 82,
+            ),
+          ),
+        ),
       ],
     );
   }

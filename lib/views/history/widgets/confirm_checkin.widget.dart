@@ -64,31 +64,30 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
       },
       builder: (context, loginViewModel, child) {
         final responsive = context.responsive;
-        final isTablet = responsive.isTablet;
         final maxContentWidth = responsive.contentMaxWidth(
           phone: double.infinity,
-          tablet: 900,
-          largeTablet: 1100,
+          tablet: 860,
+          largeTablet: 1040,
         );
         final pagePadding = responsive.value(
-          phone: 20.0,
-          tablet: 36.0,
-          largeTablet: 48.0,
+          phone: 16.0,
+          tablet: 34.0,
+          largeTablet: 52.0,
         );
         final titleFontSize = responsive.value(
           phone: AppFontSize.sizeLarge ?? 24,
-          tablet: (AppFontSize.sizeLarge ?? 24) + 6,
-          largeTablet: (AppFontSize.sizeLarge ?? 24) + 10,
+          tablet: 30.0,
+          largeTablet: 34.0,
         );
         final qrFontSize = responsive.value(
-          phone: AppFontSize.sizeSuperLarge ?? 32,
-          tablet: (AppFontSize.sizeSuperLarge ?? 32) + 6,
-          largeTablet: (AppFontSize.sizeSuperLarge ?? 32) + 10,
+          phone: 25.0,
+          tablet: 34.0,
+          largeTablet: 40.0,
         );
         final buttonFontSize = responsive.value(
-          phone: 16.0,
-          tablet: 19.0,
-          largeTablet: 21.0,
+          phone: 17.0,
+          tablet: 21.0,
+          largeTablet: 23.0,
         );
         final loginConfig = loginViewModel.userLogin;
 
@@ -99,7 +98,7 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
             statusBarBrightness: Brightness.light,
           ),
           child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: const Color(0xFFF5FBF6),
             body: SafeArea(
               child: loginViewModel.isBusy
                   ? Center(
@@ -108,179 +107,57 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
                         size: 50,
                       ),
                     )
-                  : Column(
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            padding: EdgeInsets.all(pagePadding),
-                            child: Center(
-                              child: ConstrainedBox(
-                                constraints:
-                                    BoxConstraints(maxWidth: maxContentWidth),
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: isTablet ? 28 : 20),
-                                    Text(
-                                      AppLanguage.getText('XacNhanCheckin')
-                                          .toUpperCase(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: titleFontSize,
-                                        fontWeight: FontWeight.w900,
-                                        color: AppColor.successQRCode,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final codeFontSize = isTablet
-                                              ? qrFontSize
-                                              : (AppFontSize.sizeMedium ?? 20);
-                                          return FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            alignment: Alignment.centerLeft,
-                                            child: Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        '${AppLanguage.getText('MaThamDu')}: ',
-                                                    style: TextStyle(
-                                                      fontSize: codeFontSize,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      color: AppColor
-                                                          .successQRCode,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: widget.user.maQR,
-                                                    style: TextStyle(
-                                                      fontSize: codeFontSize,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      color: AppColor.darkColor,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              maxLines: 1,
-                                              softWrap: false,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    _buildFieldRow(loginConfig?.field2,
-                                        widget.user.field2),
-                                    _buildFieldRow(loginConfig?.field3,
-                                        widget.user.field3),
-                                    _buildFieldRow(loginConfig?.field4,
-                                        widget.user.field4),
-                                    _buildFieldRow(loginConfig?.field5,
-                                        widget.user.field5),
-                                    _buildFieldRow(loginConfig?.field6,
-                                        widget.user.field6),
-                                    _buildFieldRow(loginConfig?.field7,
-                                        widget.user.field7),
-                                    _buildFieldRow(loginConfig?.field8,
-                                        widget.user.field8),
-                                    _buildFieldRow(loginConfig?.field9,
-                                        widget.user.field9),
-                                    _buildFieldRow(loginConfig?.field10,
-                                        widget.user.field10),
-                                    _buildFieldRow(loginConfig?.field11,
-                                        widget.user.field11),
-                                    _buildFieldRow(loginConfig?.field12,
-                                        widget.user.field12),
-                                    _buildFieldRow(loginConfig?.field13,
-                                        widget.user.field13),
-                                    _buildFieldRow(loginConfig?.field14,
-                                        widget.user.field14),
-                                    _buildFieldRow(loginConfig?.field15,
-                                        widget.user.field15),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                              pagePadding, 8, pagePadding, pagePadding),
+                  : SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(
+                        pagePadding,
+                        responsive.value(
+                            phone: 18, tablet: 30, largeTablet: 38),
+                        pagePadding,
+                        responsive.value(
+                            phone: 20, tablet: 34, largeTablet: 42),
+                      ),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(maxWidth: maxContentWidth),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              SizedBox(
-                                width: double.infinity,
-                                child: OutlinedButton(
-                                  onPressed:
-                                      _isSubmitting ? null : _handleConfirm,
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: AppColor.successQRCode,
-                                    side: BorderSide(
-                                      color: AppColor.successQRCode,
-                                      width: 1.5,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: _isSubmitting
-                                      ? SizedBox(
-                                          height: 22,
-                                          width: 22,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: AppColor.successQRCode,
-                                          ),
-                                        )
-                                      : Text(
-                                          AppLanguage.getText('XacNhan')
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: buttonFontSize,
-                                          ),
-                                        ),
+                              Text(
+                                AppLanguage.getText('XacNhanCheckin')
+                                    .toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: titleFontSize,
+                                  fontWeight: FontWeight.w900,
+                                  color: const Color(0xFF21743B),
+                                  letterSpacing: 0.3,
                                 ),
                               ),
-                              const SizedBox(height: 12),
                               SizedBox(
-                                width: double.infinity,
-                                child: OutlinedButton(
-                                  onPressed: _isSubmitting
-                                      ? null
-                                      : () => Navigator.pop(context),
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: AppColor.primaryColor,
-                                    side: BorderSide(
-                                      color: AppColor.primaryColor,
-                                      width: 1.5,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    AppLanguage.getText('Dong').toUpperCase(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: buttonFontSize,
-                                    ),
-                                  ),
-                                ),
+                                height: responsive.value(
+                                    phone: 18, tablet: 26, largeTablet: 30),
                               ),
+                              _buildQrCard(responsive, qrFontSize),
+                              SizedBox(
+                                height: responsive.value(
+                                    phone: 16, tablet: 24, largeTablet: 28),
+                              ),
+                              _buildInfoCard(loginConfig, responsive),
+                              SizedBox(
+                                height: responsive.value(
+                                    phone: 22, tablet: 34, largeTablet: 42),
+                              ),
+                              _buildConfirmButton(buttonFontSize, responsive),
+                              SizedBox(
+                                height: responsive.value(
+                                    phone: 12, tablet: 16, largeTablet: 20),
+                              ),
+                              _buildCloseButton(buttonFontSize, responsive),
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
             ),
           ),
@@ -289,47 +166,241 @@ class _ConfirmCheckinPageState extends State<ConfirmCheckinPage> {
     );
   }
 
-  /// Same presentation as [SuccessScreenQR] field rows (no gray fill).
-  Widget _buildFieldRow(String? loginField, String? userField) {
-    if (loginField == null && userField == null) {
-      return const SizedBox.shrink();
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (loginField != null) ...[
-          Text(
-            '$loginField:',
-            style: TextStyle(
-              fontSize: AppFontSize.sizeSmall,
-              color: AppColor.successQRCode,
-              fontWeight: FontWeight.w900,
-            ),
+  Widget _buildQrCard(AppResponsive responsive, double qrFontSize) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: responsive.value(phone: 18, tablet: 28, largeTablet: 34),
+        vertical: responsive.value(phone: 14, tablet: 20, largeTablet: 24),
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          responsive.value(phone: 22, tablet: 28, largeTablet: 32),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2D8E4A).withValues(alpha: 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 7),
           ),
         ],
-        const SizedBox(height: 8),
-        if (userField != null && userField.isNotEmpty) ...[
+      ),
+      child: Row(
+        children: [
           Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8.0),
+            width: responsive.value(phone: 46, tablet: 62, largeTablet: 70),
+            height: responsive.value(phone: 46, tablet: 62, largeTablet: 70),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColor.successQRCode,
-                width: 1.5,
+              color: const Color(0xFF4CAE31),
+              borderRadius: BorderRadius.circular(
+                responsive.value(phone: 12, tablet: 16, largeTablet: 18),
               ),
-              borderRadius: BorderRadius.circular(8.0),
             ),
+            child: Icon(
+              Icons.qr_code_2_rounded,
+              color: Colors.white,
+              size: responsive.value(phone: 29, tablet: 40, largeTablet: 46),
+            ),
+          ),
+          SizedBox(
+              width: responsive.value(phone: 16, tablet: 22, largeTablet: 28)),
+          Expanded(
             child: Text(
-              userField,
+              widget.user.maQR,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: AppFontSize.sizeMedium,
+                color: const Color(0xFF237A3D),
+                fontSize: qrFontSize,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
         ],
-        const Divider(height: 15, thickness: 0.1),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(dynamic loginConfig, AppResponsive responsive) {
+    final fields = <MapEntry<String?, String?>>[
+      MapEntry(loginConfig?.field2, widget.user.field2),
+      MapEntry(loginConfig?.field3, widget.user.field3),
+      MapEntry(loginConfig?.field4, widget.user.field4),
+      MapEntry(loginConfig?.field5, widget.user.field5),
+      MapEntry(loginConfig?.field6, widget.user.field6),
+      MapEntry(loginConfig?.field7, widget.user.field7),
+      MapEntry(loginConfig?.field8, widget.user.field8),
+      MapEntry(loginConfig?.field9, widget.user.field9),
+      MapEntry(loginConfig?.field10, widget.user.field10),
+      MapEntry(loginConfig?.field11, widget.user.field11),
+      MapEntry(loginConfig?.field12, widget.user.field12),
+      MapEntry(loginConfig?.field13, widget.user.field13),
+      MapEntry(loginConfig?.field14, widget.user.field14),
+      MapEntry(loginConfig?.field15, widget.user.field15),
+    ].where((field) => field.value?.trim().isNotEmpty == true).toList();
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: responsive.value(phone: 20, tablet: 30, largeTablet: 38),
+        vertical: responsive.value(phone: 8, tablet: 12, largeTablet: 16),
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          responsive.value(phone: 24, tablet: 30, largeTablet: 34),
+        ),
+        border: Border.all(color: const Color(0xFFECE4D7)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF8B7F70).withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 7),
+          ),
+        ],
+      ),
+      child: fields.isEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                AppLanguage.getText('ChuaCoDuLieuCheckin'),
+                style: TextStyle(
+                  color: const Color(0xFF77716D),
+                  fontSize: responsive.value(phone: 15, tablet: 19),
+                ),
+              ),
+            )
+          : Column(
+              children: List.generate(
+                fields.length,
+                (index) => _buildFieldRow(
+                  fields[index].key,
+                  fields[index].value!,
+                  responsive,
+                  isLast: index == fields.length - 1,
+                ),
+              ),
+            ),
+    );
+  }
+
+  Widget _buildFieldRow(
+    String? loginField,
+    String userField,
+    AppResponsive responsive, {
+    required bool isLast,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        vertical: responsive.value(phone: 12, tablet: 17, largeTablet: 21),
+      ),
+      decoration: isLast
+          ? null
+          : const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color(0xFFEDE8E0)),
+              ),
+            ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            (loginField?.trim().isNotEmpty == true
+                    ? loginField!.trim()
+                    : AppLanguage.getText('ThongTin'))
+                .toUpperCase(),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: const Color(0xFF9A9A9A),
+              fontSize:
+                  responsive.value(phone: 13, tablet: 17, largeTablet: 19),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            userField.trim(),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: const Color(0xFF292627),
+              fontSize:
+                  responsive.value(phone: 19, tablet: 25, largeTablet: 29),
+              fontWeight: FontWeight.w700,
+              height: 1.15,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConfirmButton(double fontSize, AppResponsive responsive) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: _isSubmitting ? null : _handleConfirm,
+        icon: _isSubmitting
+            ? SizedBox(
+                width: responsive.value(phone: 22, tablet: 28),
+                height: responsive.value(phone: 22, tablet: 28),
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: Colors.white,
+                ),
+              )
+            : Icon(
+                Icons.qr_code_2_rounded,
+                size: responsive.value(phone: 24, tablet: 32, largeTablet: 36),
+              ),
+        label: Text(
+          AppLanguage.getText('XacNhan').toUpperCase(),
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w800),
+        ),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: const Color(0xFF4CAF2A),
+          disabledBackgroundColor: const Color(0xFF99C58C),
+          elevation: 2,
+          padding: EdgeInsets.symmetric(
+            vertical: responsive.value(phone: 16, tablet: 21, largeTablet: 24),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              responsive.value(phone: 18, tablet: 24, largeTablet: 28),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCloseButton(double fontSize, AppResponsive responsive) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: _isSubmitting ? null : () => Navigator.pop(context),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColor.primaryColor,
+          side: BorderSide(
+            color: AppColor.primaryColor,
+            width: responsive.value(phone: 1.5, tablet: 2),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: responsive.value(phone: 15, tablet: 20, largeTablet: 23),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              responsive.value(phone: 18, tablet: 24, largeTablet: 28),
+            ),
+          ),
+        ),
+        child: Text(
+          AppLanguage.getText('Dong').toUpperCase(),
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w800),
+        ),
+      ),
     );
   }
 }

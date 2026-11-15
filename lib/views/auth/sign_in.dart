@@ -1,3 +1,4 @@
+import 'package:checkin/app/app_language.dart';
 import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/viewmodel/login.vm.dart';
@@ -369,19 +370,23 @@ class _LoginCard extends StatelessWidget {
                           color: Colors.white,
                           size: 30,
                         )
-                      : const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Login',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 16,
+                      : Semantics(
+                          label: AppLanguage.getText('DangNhap'),
+                          button: true,
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            Icon(Icons.arrow_forward_rounded, size: 20),
-                          ],
+                              SizedBox(width: 10),
+                              Icon(Icons.arrow_forward_rounded, size: 20),
+                            ],
+                          ),
                         ),
                 ),
               ),

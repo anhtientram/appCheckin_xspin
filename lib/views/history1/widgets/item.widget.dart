@@ -133,35 +133,51 @@ class _ItemTicketQRState extends State<ItemTicket> {
                                   fontSize:
                                       responsive.value(phone: 17, tablet: 23),
                                   color: AppColor.darkColor,
-                                  height: 1.12,
+                                  height: 1.4,
                                 ),
                               ),
                               if (!_checkedIn) ...[
                                 SizedBox(
                                     height:
                                         responsive.value(phone: 7, tablet: 8)),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.visibility_outlined,
-                                      size: responsive.value(
-                                          phone: 16, tablet: 29),
-                                      color: AppColor.darkColor
-                                          .withValues(alpha: 0.35),
+                                InkWell(
+                                  onTap: widget.onTap,
+                                  borderRadius: BorderRadius.circular(
+                                    responsive.value(phone: 8, tablet: 10),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          responsive.value(phone: 4, tablet: 6),
+                                      horizontal:
+                                          responsive.value(phone: 2, tablet: 4),
                                     ),
-                                    if (!showManualActions && !isTablet) ...[
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        AppLanguage.getText('XemChiTiet'),
-                                        style: TextStyle(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.visibility_outlined,
+                                          size: responsive.value(
+                                              phone: 18, tablet: 34),
                                           color: AppColor.darkColor
-                                              .withValues(alpha: 0.4),
-                                          fontSize: responsive.value(
-                                              phone: 11, tablet: 13),
+                                              .withValues(alpha: 0.35),
                                         ),
-                                      ),
-                                    ],
-                                  ],
+                                        if (!showManualActions &&
+                                            !isTablet) ...[
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            AppLanguage.getText('XemChiTiet'),
+                                            style: TextStyle(
+                                              color: AppColor.darkColor
+                                                  .withValues(alpha: 0.4),
+                                              fontSize: responsive.value(
+                                                  phone: 11, tablet: 13),
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ],

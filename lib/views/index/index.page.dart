@@ -1,4 +1,3 @@
-import 'package:checkin/viewmodel/qr_code.vm.dart';
 import 'package:flutter/material.dart';
 import 'package:checkin/base/base_page.dart';
 import 'package:checkin/base/nav_bar.dart';
@@ -30,10 +29,12 @@ class _IndexPageState extends State<IndexPage> {
           index: viewModel.currentIndex,
           children: viewModel.getPages(),
         ),
-        bottomNav: HomeNavigationBar(
-          currentIndex: viewModel.currentIndex,
-          onTabSelected: (index) => viewModel.setIndex(index),
-        ),
+        bottomNav: viewModel.currentIndex == 1
+            ? null
+            : HomeNavigationBar(
+                currentIndex: viewModel.currentIndex,
+                onTabSelected: (index) => viewModel.setIndex(index),
+              ),
       ),
     );
   }

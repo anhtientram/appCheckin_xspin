@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:checkin/app/app_route_observer.dart';
 import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
+import 'package:checkin/model/user.model.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/login.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
@@ -156,6 +157,28 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
     }
   }
 
+  Future<void> _openDemoSuccess(QRCodeViewModel viewModel) async {
+    if (viewModel.isBusy || viewModel.isScanQr) {
+      return;
+    }
+
+    viewModel.currentUser = Users(
+      maQR: 'DEMO-QR-001',
+      idNguoiThamDu: 'demo-attendee',
+      isCheckin: true,
+      field2: 'Người tham dự demo',
+      field3: '0901 234 567',
+      field4: 'Khu vực demo',
+      dacheckIn: 1,
+      soLuotCheckIntoida: 1,
+      thoiDiemCheckin: DateTime.now().toIso8601String(),
+    );
+
+    await viewModel.showAutomaticResult(
+      isSuccess: true,
+    );
+  }
+
   Future<void> _handleDetection(
     BarcodeCapture capture, {
     required Rect scanWindow,
@@ -285,15 +308,34 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
                           ),
                         ),
                       ),
-                      // Positioned(
-                      //   left: 16,
-                      //   right: 16,
-                      //   bottom: bottomInset + 18,
-                      //   child: _AutoDemoQRCodeInput(
-                      //     controller: _demoQRCodeController,
-                      //     isBusy: viewModel.isBusy,
-                      //     isTablet: isTablet,
-                      //     onSubmitted: () => _submitDemoQRCode(viewModel),
+                      // SafeArea(
+                      //   child: Align(
+                      //     alignment: Alignment.bottomCenter,
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.only(bottom: 18),
+                      //       child: OutlinedButton.icon(
+                      //         onPressed: viewModel.isBusy
+                      //             ? null
+                      //             : () => _openDemoSuccess(viewModel),
+                      //         icon: const Icon(Icons.preview_outlined),
+                      //         label: const Text('Demo'),
+                      //         style: OutlinedButton.styleFrom(
+                      //           foregroundColor: Colors.white,
+                      //           side: BorderSide(
+                      //             color: Colors.white.withValues(alpha: 0.8),
+                      //           ),
+                      //           backgroundColor:
+                      //               Colors.black.withValues(alpha: 0.35),
+                      //           padding: const EdgeInsets.symmetric(
+                      //             horizontal: 18,
+                      //             vertical: 11,
+                      //           ),
+                      //           shape: RoundedRectangleBorder(
+                      //             borderRadius: BorderRadius.circular(14),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
                       //   ),
                       // ),
                     ],

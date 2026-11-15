@@ -109,7 +109,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _EventProgressCard(
-                          eventName: event?.tenSukien,
+                          eventName: event?.tenSukien?.trim().isNotEmpty == true
+                              ? event!.tenSukien
+                              : AppLanguage.getText('TenSuKien'),
                           checkedIn: checkedInValue,
                           total: totalValue,
                           progress: progress,
@@ -264,27 +266,30 @@ class _EventProgressCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 7),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '$checkedIn',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: responsive.value(phone: 38, tablet: 48),
-                    fontWeight: FontWeight.w900,
-                    height: 1,
+          Semantics(
+            label: AppLanguage.getText('TongLuot'),
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '$checkedIn',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: responsive.value(phone: 38, tablet: 48),
+                      fontWeight: FontWeight.w900,
+                      height: 1,
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: ' / $total',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.88),
-                    fontSize: responsive.value(phone: 22, tablet: 28),
-                    fontWeight: FontWeight.w700,
+                  TextSpan(
+                    text: ' / $total',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.88),
+                      fontSize: responsive.value(phone: 22, tablet: 28),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 18),

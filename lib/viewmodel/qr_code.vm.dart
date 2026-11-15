@@ -491,13 +491,15 @@ class QRCodeViewModel extends BaseViewModel {
   Future<void> showAutomaticResult({
     required bool isSuccess,
     String? description,
+    Duration? autoCloseDuration,
   }) async {
     await _showResultPage(
       isSuccess
           ? SuccessScreenQR(
               qrCodeViewModel: this,
               autoClose: true,
-              autoCloseDuration: _automaticSuccessCloseDuration(),
+              autoCloseDuration:
+                  autoCloseDuration ?? _automaticSuccessCloseDuration(),
             )
           : FailedQrCode(
               qrCodeViewModel: this,

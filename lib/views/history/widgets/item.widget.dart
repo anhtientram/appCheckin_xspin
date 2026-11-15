@@ -141,7 +141,7 @@ class _ItemTicketQRState extends State<ItemTicketQR> {
                                       fontSize: responsive.value(
                                           phone: 18, tablet: 24),
                                       fontWeight: FontWeight.w700,
-                                      height: 1.12,
+                                      height: 1.4,
                                     ),
                                   ),
                                 ],
@@ -221,7 +221,7 @@ class _ItemTicketQRState extends State<ItemTicketQR> {
                                 tooltip: AppLanguage.getText('XemChiTiet'),
                                 icon: Icon(
                                   Icons.visibility_outlined,
-                                  size: responsive.value(phone: 20, tablet: 28),
+                                  size: responsive.value(phone: 22, tablet: 34),
                                   color: AppColor.darkColor
                                       .withValues(alpha: 0.38),
                                 ),

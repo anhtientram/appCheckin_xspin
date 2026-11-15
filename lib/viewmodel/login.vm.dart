@@ -131,8 +131,7 @@ class LoginViewModel extends BaseViewModel {
     } catch (e) {
       print('Login failed: $e');
       // print('${Api.hostApi}${Api.login}');
-      showSignInFailedDialog(
-          context, 'An error occurred during login, please try again later');
+      showSignInFailedDialog(context, AppLanguage.getText('SuCoInternet'));
     }
     setBusy(false);
     notifyListeners();

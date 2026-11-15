@@ -272,6 +272,8 @@ class _HistoryPage1State extends State<HistoryPage1>
   }
 
   Widget buildUserList(List<Users> users, String tabKey) {
+    final responsive = context.responsive;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -313,6 +315,15 @@ class _HistoryPage1State extends State<HistoryPage1>
                         ),
                       )),
           ),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: responsive.value(
+              phone: 50,
+              tablet: 68,
+              largeTablet: 82,
+            ),
+          ),
+        ),
       ],
     );
   }

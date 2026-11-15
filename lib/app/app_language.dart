@@ -96,6 +96,8 @@ class AppLanguage {
     'SoDienThoai': 'Số điện thoại',
     'KhuVuc': 'Khu vực',
     'TuDongDongSau': 'Tự động đóng sau',
+    'TuDongDongSau3Giay': 'Tự động đóng sau 3 giây',
+    'Giay': 'giây',
     'XemThem': 'Xem thêm',
     'ChuaCoDuLieuCheckin': 'Chưa có dữ liệu check-in',
 

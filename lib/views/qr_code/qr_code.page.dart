@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_route_observer.dart';
 import 'package:checkin/base/app_responsive.dart';
-import 'package:checkin/base/base_page.dart';
-import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/constants/app_fontsize.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
@@ -31,7 +29,6 @@ class QrCodePage extends StatefulWidget {
 class _QrCodePageState extends State<QrCodePage>
     with WidgetsBindingObserver, RouteAware {
   ModalRoute<dynamic>? _route;
-  final TextEditingController _demoQRCodeController = TextEditingController();
 
   @override
   void initState() {
@@ -81,7 +78,6 @@ class _QrCodePageState extends State<QrCodePage>
     }
     widget.qrViewModel.unbindScannerPage();
     unawaited(widget.qrViewModel.disposeScanner());
-    _demoQRCodeController.dispose();
     super.dispose();
   }
 
@@ -138,17 +134,12 @@ class _QrCodePageState extends State<QrCodePage>
     }
   }
 
-  Future<void> _submitDemoQRCode(QRCodeViewModel viewModel) async {
-    final qrCode = _demoQRCodeController.text.trim();
-    if (qrCode.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLanguage.getText('VuiLongNhapMaQRDemo'))),
-      );
-      return;
+  Future<void> _closeScanner() async {
+    widget.qrViewModel.unbindScannerPage();
+    await widget.qrViewModel.stopScannerSafely();
+    if (mounted) {
+      await widget.indexViewModel.setIndex(0);
     }
-
-    FocusScope.of(context).unfocus();
-    await viewModel.runDemoCheckIn(qrCode);
   }
 
   @override
@@ -169,11 +160,13 @@ class _QrCodePageState extends State<QrCodePage>
         final scanAreaSize = isTablet ? 320.0 : 250.0;
 
         viewModel.bindScannerPage(context);
-        return BasePage(
-          showLogo: true,
-          body: Container(
-            width: double.infinity,
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Stack(
+              fit: StackFit.expand,
               children: [
                 Column(
                   children: [
@@ -200,6 +193,7 @@ class _QrCodePageState extends State<QrCodePage>
                             children: [
                               MobileScanner(
                                 controller: viewModel.scannerController!,
+                                fit: BoxFit.cover,
                                 scanWindow: scanWindow,
                                 scanWindowUpdateThreshold: 8,
                                 onDetect: (qrcode) async {
@@ -252,24 +246,50 @@ class _QrCodePageState extends State<QrCodePage>
                     ),
                   ],
                 ),
-                Positioned(
-                  top: 50,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent.withValues(alpha: 0.5),
-                      ),
-                      child: Text(
-                        AppLanguage.getText('HayDuaMaQRVaoGiuaKhung'),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: AppFontSize.sizeSmall,
+                // Positioned(
+                //   top: 50,
+                //   left: 0,
+                //   right: 0,
+                //   child: Center(
+                //     child: Container(
+                //       padding:
+                //           EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                //       decoration: BoxDecoration(
+                //         color: Colors.redAccent.withValues(alpha: 0.5),
+                //       ),
+                //       child: Text(
+                //         AppLanguage.getText('HayDuaMaQRVaoGiuaKhung'),
+                //         style: TextStyle(
+                //           color: Colors.white,
+                //           fontSize: AppFontSize.sizeSmall,
+                //         ),
+                //         textAlign: TextAlign.center,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                SafeArea(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: _closeScanner,
+                          child: Ink(
+                            width: 42,
+                            height: 42,
+                            child: Padding(
+                              padding: const EdgeInsets.all(9),
+                              child: Image.asset(
+                                'assets/logo_close.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -308,7 +328,6 @@ class _QrCodePageState extends State<QrCodePage>
               ],
             ),
           ),
-          title: AppLanguage.getText('CheckinQRCode'),
         );
       },
     );

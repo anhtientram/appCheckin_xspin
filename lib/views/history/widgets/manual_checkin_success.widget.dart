@@ -111,7 +111,13 @@ class ManualCheckinSuccessPage extends StatelessWidget {
                                 borderColor: _infoBorder,
                               ),
                               if (showAutoCloseMessage) ...[
-                                const SizedBox(height: 18),
+                                SizedBox(
+                                  height: responsive.value(
+                                    phone: 30,
+                                    tablet: 40,
+                                    largeTablet: 48,
+                                  ),
+                                ),
                                 _AutoCloseCountdown(
                                   duration: autoCloseDuration,
                                   onComplete: () {
@@ -120,34 +126,35 @@ class ManualCheckinSuccessPage extends StatelessWidget {
                                     }
                                   },
                                 ),
+                              ] else ...[
+                                const SizedBox(height: 26),
+                                _ActionButton(
+                                  icon: Icons.qr_code_scanner_rounded,
+                                  label: AppLanguage.getText(
+                                    'TiepTucCheckIn',
+                                  ),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: _green,
+                                  onPressed: () => _leave(
+                                    context,
+                                    onContinueCheckin,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                _ActionButton(
+                                  icon: Icons.chevron_left_rounded,
+                                  label: AppLanguage.getText(
+                                    'QuayLaiDanhSach',
+                                  ),
+                                  foregroundColor: const Color(0xFF2D2B2B),
+                                  backgroundColor: Colors.white,
+                                  borderColor: _infoBorder,
+                                  onPressed: () => _leave(
+                                    context,
+                                    onBackToList,
+                                  ),
+                                ),
                               ],
-                              const SizedBox(height: 26),
-                              _ActionButton(
-                                icon: Icons.qr_code_scanner_rounded,
-                                label: AppLanguage.getText(
-                                  'TiepTucCheckinThanhCong',
-                                ),
-                                foregroundColor: Colors.white,
-                                backgroundColor: _green,
-                                onPressed: () => _leave(
-                                  context,
-                                  onContinueCheckin,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              _ActionButton(
-                                icon: Icons.chevron_left_rounded,
-                                label: AppLanguage.getText(
-                                  'QuayLaiDanhSachThanhCong',
-                                ),
-                                foregroundColor: const Color(0xFF2D2B2B),
-                                backgroundColor: Colors.white,
-                                borderColor: _infoBorder,
-                                onPressed: () => _leave(
-                                  context,
-                                  onBackToList,
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -269,7 +276,7 @@ class _AutoCloseCountdownState extends State<_AutoCloseCountdown> {
   Widget build(BuildContext context) {
     final responsive = context.responsive;
     return Text(
-      '${AppLanguage.getText('TuDongDongSau')} $_remainingSeconds',
+      '${AppLanguage.getText('TuDongDongSau')} $_remainingSeconds ${AppLanguage.getText('Giay')}',
       textAlign: TextAlign.center,
       style: TextStyle(
         color: const Color(0xFF77716D),
@@ -347,7 +354,7 @@ class _SuccessHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppLanguage.getText('CheckInThanhCong'),
+                  AppLanguage.getText('CheckinThanhCong'),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -429,19 +436,22 @@ class _QrCodeCard extends StatelessWidget {
           ),
           SizedBox(width: responsive.value(phone: 16, tablet: 20)),
           Expanded(
-            child: Text(
-              qrCode,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: const Color(0xFF145D31),
-                fontSize: responsive.value(
-                  phone: 27,
-                  tablet: 36,
-                  largeTablet: 42,
+            child: Semantics(
+              label: AppLanguage.getText('MaThamDu'),
+              child: Text(
+                qrCode,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: const Color(0xFF145D31),
+                  fontSize: responsive.value(
+                    phone: 27,
+                    tablet: 36,
+                    largeTablet: 42,
+                  ),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.2,
                 ),
-                fontWeight: FontWeight.w900,
-                letterSpacing: 0.2,
               ),
             ),
           ),

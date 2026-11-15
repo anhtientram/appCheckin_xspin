@@ -20,7 +20,7 @@ class FailedQrCode extends StatefulWidget {
     required this.title,
     required this.desc,
     this.autoClose = false,
-    this.autoCloseDuration = const Duration(milliseconds: 2500),
+    this.autoCloseDuration = const Duration(seconds: 3),
   });
 
   @override
@@ -116,7 +116,7 @@ class _FailedQrCodeState extends State<FailedQrCode> {
                   // Continue Button
                   if (widget.autoClose)
                     Text(
-                      AppLanguage.getText('TuDongDongSau'),
+                      AppLanguage.getText('TuDongDongSau3Giay'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: isTablet
