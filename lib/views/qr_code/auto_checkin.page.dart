@@ -8,9 +8,12 @@ import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/login.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
 import 'package:checkin/views/qr_code/checkin_background_layer.dart';
+import 'package:checkin/views/qr_code/camera_permission_prompt.dart';
 import 'package:checkin/views/qr_code/scan_guide_frame.dart';
 import 'package:checkin/views/qr_code/scan_window_barcode_filter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:stacked/stacked.dart';
 
@@ -259,6 +262,20 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
                               ? AppColor.oriColor
                               : AppColor.primaryColor,
                         ),
+                      ),
+                      ValueListenableBuilder<MobileScannerState>(
+                        valueListenable: viewModel.scannerController!,
+                        builder: (context, scannerState, child) {
+                          if (scannerState.error == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return CameraPermissionPrompt(
+                            onRetry: _resumeScannerIfVisible,
+                            onOpenSettings: AppSettings.openAppSettings,
+                            showRetry:
+                                defaultTargetPlatform != TargetPlatform.iOS,
+                          );
+                        },
                       ),
                       SafeArea(
                         child: Align(

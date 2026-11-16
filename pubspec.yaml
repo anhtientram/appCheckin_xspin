@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 1.0.18+31
+version: 1.0.18+32
 
 environment:
     sdk: ">=3.2.3 <4.0.0"
@@ -40,6 +40,7 @@ dependencies:
     get_it: ^8.0.3
     device_info_plus: ^11.4.0
     mobile_scanner: ^7.0.1
+    app_settings: ^7.0.0
     stacked:
     awesome_dialog: ^3.3.0
     lottie:

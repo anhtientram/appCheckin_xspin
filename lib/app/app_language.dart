@@ -100,6 +100,10 @@ class AppLanguage {
     'Giay': 'giây',
     'XemThem': 'Xem thêm',
     'ChuaCoDuLieuCheckin': 'Chưa có dữ liệu check-in',
+    'KhongTheTruyCapCamera': 'Không thể truy cập máy ảnh',
+    'CapQuyenCameraDeQuetQR':
+        'Vui lòng cấp quyền máy ảnh để quét mã QR check-in.',
+    'MoCaiDat': 'Mở cài đặt',
 
     // Errors & Scanner messages
     'HayDuaMaQRVaoGiuaKhung': 'Hãy đưa mã QR vào giữa khung',
