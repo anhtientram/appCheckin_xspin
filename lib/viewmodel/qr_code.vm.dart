@@ -507,6 +507,7 @@ class QRCodeViewModel extends BaseViewModel {
               desc: description ??
                   AppLanguage.getText('VuiLongThuLaiVoiMaQRKhac'),
               autoClose: true,
+              autoCloseDuration: const Duration(seconds: 3),
             ),
       restartScannerAfterClose: true,
     );

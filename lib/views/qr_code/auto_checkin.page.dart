@@ -4,11 +4,11 @@ import 'dart:math' as math;
 import 'package:checkin/app/app_route_observer.dart';
 import 'package:checkin/base/app_responsive.dart';
 import 'package:checkin/constants/app_color.dart';
-import 'package:checkin/model/user.model.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/login.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
 import 'package:checkin/views/qr_code/checkin_background_layer.dart';
+import 'package:checkin/views/qr_code/scan_guide_frame.dart';
 import 'package:checkin/views/qr_code/scan_window_barcode_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -157,28 +157,6 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
     }
   }
 
-  Future<void> _openDemoSuccess(QRCodeViewModel viewModel) async {
-    if (viewModel.isBusy || viewModel.isScanQr) {
-      return;
-    }
-
-    viewModel.currentUser = Users(
-      maQR: 'DEMO-QR-001',
-      idNguoiThamDu: 'demo-attendee',
-      isCheckin: true,
-      field2: 'Người tham dự demo',
-      field3: '0901 234 567',
-      field4: 'Khu vực demo',
-      dacheckIn: 1,
-      soLuotCheckIntoida: 1,
-      thoiDiemCheckin: DateTime.now().toIso8601String(),
-    );
-
-    await viewModel.showAutomaticResult(
-      isSuccess: true,
-    );
-  }
-
   Future<void> _handleDetection(
     BarcodeCapture capture, {
     required Rect scanWindow,
@@ -275,7 +253,7 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
                       ),
                       Positioned.fromRect(
                         rect: scanWindow,
-                        child: _ScanGuideFrame(
+                        child: ScanGuideFrame(
                           size: scanSize,
                           accentColor: viewModel.isBusy
                               ? AppColor.oriColor
@@ -308,36 +286,6 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
                           ),
                         ),
                       ),
-                      // SafeArea(
-                      //   child: Align(
-                      //     alignment: Alignment.bottomCenter,
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.only(bottom: 18),
-                      //       child: OutlinedButton.icon(
-                      //         onPressed: viewModel.isBusy
-                      //             ? null
-                      //             : () => _openDemoSuccess(viewModel),
-                      //         icon: const Icon(Icons.preview_outlined),
-                      //         label: const Text('Demo'),
-                      //         style: OutlinedButton.styleFrom(
-                      //           foregroundColor: Colors.white,
-                      //           side: BorderSide(
-                      //             color: Colors.white.withValues(alpha: 0.8),
-                      //           ),
-                      //           backgroundColor:
-                      //               Colors.black.withValues(alpha: 0.35),
-                      //           padding: const EdgeInsets.symmetric(
-                      //             horizontal: 18,
-                      //             vertical: 11,
-                      //           ),
-                      //           shape: RoundedRectangleBorder(
-                      //             borderRadius: BorderRadius.circular(14),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   );
                 },
@@ -437,95 +385,3 @@ class _AutoCheckinPageState extends State<AutoCheckinPage>
 //     );
 //   }
 // }
-
-class _ScanGuideFrame extends StatelessWidget {
-  const _ScanGuideFrame({
-    required this.size,
-    required this.accentColor,
-  });
-
-  final double size;
-  final Color accentColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.08),
-          ),
-        ),
-        child: Stack(
-          children: [
-            _FrameCorner(
-              alignment: Alignment.topLeft,
-              accentColor: accentColor,
-            ),
-            _FrameCorner(
-              alignment: Alignment.topRight,
-              accentColor: accentColor,
-            ),
-            _FrameCorner(
-              alignment: Alignment.bottomLeft,
-              accentColor: accentColor,
-            ),
-            _FrameCorner(
-              alignment: Alignment.bottomRight,
-              accentColor: accentColor,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FrameCorner extends StatelessWidget {
-  const _FrameCorner({
-    required this.alignment,
-    required this.accentColor,
-  });
-
-  final Alignment alignment;
-  final Color accentColor;
-
-  @override
-  Widget build(BuildContext context) {
-    final isLeft = alignment.x < 0;
-    final isTop = alignment.y < 0;
-
-    return Align(
-      alignment: alignment,
-      child: Container(
-        width: 52,
-        height: 52,
-        decoration: BoxDecoration(
-          border: Border(
-            top: isTop
-                ? BorderSide(color: accentColor, width: 5)
-                : BorderSide.none,
-            bottom: !isTop
-                ? BorderSide(color: accentColor, width: 5)
-                : BorderSide.none,
-            left: isLeft
-                ? BorderSide(color: accentColor, width: 5)
-                : BorderSide.none,
-            right: !isLeft
-                ? BorderSide(color: accentColor, width: 5)
-                : BorderSide.none,
-          ),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(isLeft && isTop ? 28 : 0),
-            topRight: Radius.circular(!isLeft && isTop ? 28 : 0),
-            bottomLeft: Radius.circular(isLeft && !isTop ? 28 : 0),
-            bottomRight: Radius.circular(!isLeft && !isTop ? 28 : 0),
-          ),
-        ),
-      ),
-    );
-  }
-}

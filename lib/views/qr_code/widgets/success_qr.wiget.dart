@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_sp.dart';
 import 'package:checkin/app/app_sp_key.dart';
@@ -26,28 +24,6 @@ class SuccessScreenQR extends StatefulWidget {
 }
 
 class _SuccessScreenQRState extends State<SuccessScreenQR> {
-  Timer? _dismissTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.autoClose) {
-      _dismissTimer = Timer(widget.autoCloseDuration, _closeIfMounted);
-    }
-  }
-
-  @override
-  void dispose() {
-    _dismissTimer?.cancel();
-    super.dispose();
-  }
-
-  void _closeIfMounted() {
-    if (mounted) {
-      Navigator.maybePop(context);
-    }
-  }
-
   Future<void> _refreshAndContinue() async {
     await _refreshUsers();
   }

@@ -1,16 +1,15 @@
 import 'dart:async';
 
-import 'package:checkin/app/app_language.dart';
 import 'package:checkin/app/app_route_observer.dart';
 import 'package:checkin/base/app_responsive.dart';
-import 'package:checkin/constants/app_fontsize.dart';
+import 'package:checkin/constants/app_color.dart';
 import 'package:checkin/viewmodel/index.vm.dart';
 import 'package:checkin/viewmodel/qr_code.vm.dart';
 import 'package:checkin/views/qr_code/checkin_background_layer.dart';
+import 'package:checkin/views/qr_code/scan_guide_frame.dart';
 import 'package:checkin/views/qr_code/scan_window_barcode_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:qr_scanner_overlay/qr_scanner_overlay.dart';
 import 'package:stacked/stacked.dart';
 
 class QrCodePage extends StatefulWidget {
@@ -157,7 +156,7 @@ class _QrCodePageState extends State<QrCodePage>
       },
       builder: (context, viewModel, child) {
         final isTablet = context.responsive.isTablet;
-        final scanAreaSize = isTablet ? 320.0 : 250.0;
+        final scanAreaSize = isTablet ? 360.0 : 280.0;
 
         viewModel.bindScannerPage(context);
         return Scaffold(
@@ -235,9 +234,14 @@ class _QrCodePageState extends State<QrCodePage>
                                     .userLogin?.imageQr,
                                 cutoutRect: scanWindow,
                               ),
-                              QRScannerOverlay(
-                                overlayColor: Colors.transparent,
-                                scanAreaSize: Size(scanArea, scanArea),
+                              Positioned.fromRect(
+                                rect: scanWindow,
+                                child: ScanGuideFrame(
+                                  size: scanArea,
+                                  accentColor: viewModel.isBusy
+                                      ? AppColor.oriColor
+                                      : AppColor.primaryColor,
+                                ),
                               ),
                             ],
                           );
@@ -319,12 +323,6 @@ class _QrCodePageState extends State<QrCodePage>
                     ),
                   ),
                 ),
-                // Positioned(
-                //   left: 16,
-                //   right: 16,
-                //   bottom: bottomInset + 18,
-                //   child: _buildDemoQRCodeInput(context, viewModel, isTablet),
-                // ),
               ],
             ),
           ),

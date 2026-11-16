@@ -29,12 +29,24 @@ class FailedQrCode extends StatefulWidget {
 
 class _FailedQrCodeState extends State<FailedQrCode> {
   Timer? _dismissTimer;
+  late int _remainingSeconds;
 
   @override
   void initState() {
     super.initState();
     if (widget.autoClose) {
-      _dismissTimer = Timer(widget.autoCloseDuration, _closeIfMounted);
+      _remainingSeconds = _secondsFromDuration(widget.autoCloseDuration);
+      _dismissTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (!mounted) {
+          return;
+        }
+        if (_remainingSeconds <= 1) {
+          _dismissTimer?.cancel();
+          _closeIfMounted();
+          return;
+        }
+        setState(() => _remainingSeconds--);
+      });
     }
   }
 
@@ -55,12 +67,18 @@ class _FailedQrCodeState extends State<FailedQrCode> {
     _closeIfMounted();
   }
 
+  int _secondsFromDuration(Duration duration) {
+    final seconds = (duration.inMilliseconds / 1000).ceil();
+    return seconds < 1 ? 1 : seconds;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTablet = context.responsive.isTablet;
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -116,7 +134,7 @@ class _FailedQrCodeState extends State<FailedQrCode> {
                   // Continue Button
                   if (widget.autoClose)
                     Text(
-                      AppLanguage.getText('TuDongDongSau3Giay'),
+                      '${AppLanguage.getText('TuDongDongSau')} $_remainingSeconds ${AppLanguage.getText('Giay')}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: isTablet
